@@ -17,12 +17,18 @@ Because ``django-switchuser`` was a quick project, it does make one assumption:
   not hold*: you'll need to submit a pull request (hint: take a look at
   ``django_switchuser/state.py``)... Sorry :(
 
+Compatibility
+-------------
+
+Tested with Django 1.8 through 1.10, should work with earlier Django versions too.
+
 Installation
 ------------
 
 1. ``pip install django-switchuser``
-2. Add a few things to ``settings.py`` (note: the ``SuStateMiddleware`` must
-   appear *after* the ``AuthenticationMiddleware``)::
+2. Add a few things to ``settings.py`` (note: the ``SuStateMiddleware`` should
+   be the *very first* class in the list; this guarantees that
+   ``request.su_state`` will always be available)::
 
     INSTALLED_APPS = (
         ...
@@ -31,9 +37,6 @@ Installation
     )
 
     MIDDLEWARE_CLASSES = (
-        ...
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django_switchuser.middleware.SuStateMiddleware",
         ...
     )
@@ -145,7 +148,11 @@ attributes:
                 return "%s" %(user.get_profile().client_id, )
 
     ``SuState.set_su_user_id(su_user_id)``:
-        Switches to the user with id ``su_user_id``.
+        Switches to the user with id ``su_user_id`` if they are included in
+        ``SuState.available_users()``.
+
+    ``SuState.set_su_user(su_user)``:
+        Switches to User ``su_user``. No permissions checks are performed.
 
     ``SuState.clear_su()``:
         Reverts back to the original user.

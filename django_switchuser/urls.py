@@ -1,12 +1,12 @@
+from django.conf.urls import url
 try:
-    from django.conf.urls import url, patterns
+    from django.conf.urls import patterns
 except ImportError:
-    # for Django version less then 1.4
-    from django.conf.urls.defaults import url, patterns
+    patterns = lambda _, *p: p
 
 from . import views
 
-urlpatterns = patterns("",
+urlpatterns = patterns("", *[
     url(r"^$", views.su_login, name="su-login"),
     url(r"^logout$", views.su_logout, name="su-logout"),
-)
+])

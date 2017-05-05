@@ -1,9 +1,13 @@
 import sys
 
 from django.conf import settings as s
-from django.utils.importlib import import_module
+from importlib import import_module
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object
 
-class SuStateMiddleware(object):
+class SuStateMiddleware(MiddlewareMixin):
     su_state_fqcn = getattr(s, "SU_STATE_CLASS", "django_switchuser.state.SuState")
     su_state_module_n, _, su_state_class_n = su_state_fqcn.rpartition(".")
     su_state_module = import_module(su_state_module_n)

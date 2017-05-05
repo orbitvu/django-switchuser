@@ -1,19 +1,21 @@
-syntax: glob
 *.class
 *.o
 *.pyc
 *.sqlite3
-*.sw[op]
+*.sw[a-z]
 *~
 .DS_Store
 bin-debug/*
 bin-release/*
 bin/*
-dist/*
 tags
 *.beam
 *.dump
 env/
 .env/
 *egg-info*
+misc/
+dist/
+Icon?
+node_modules/
 build/
