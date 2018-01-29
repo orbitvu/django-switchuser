@@ -1,5 +1,9 @@
 import logging
-import urlparse
+
+try:
+    from urllib.parse import urlsplit, urlunsplit
+except ImportError:
+    from urlparse import urlsplit, urlunsplit
 
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
@@ -16,12 +20,12 @@ def referrer_path(meta, default=None):
     referrer = meta.get("HTTP_REFERER")
     if not referrer:
         return default
-    parsed = urlparse.urlsplit(referrer)
+    parsed = urlsplit(referrer)
     next_domain = drop_subdomain(parsed.netloc)
     cur_domain = drop_subdomain(meta.get("HTTP_HOST", ""))
     if next_domain != cur_domain:
         return default
-    return urlparse.urlunsplit(('', '') + parsed[2:])
+    return urlunsplit(('', '') + parsed[2:])
 
 def guess_next(request, default=None):
     if "next" in request.GET:
